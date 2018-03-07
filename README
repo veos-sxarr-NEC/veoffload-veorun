@@ -1,0 +1,13 @@
+VEORUN: a helper program for VE offloading framework
+
+Veorun is a small VE program for VE offloading framework (VEO).
+
+1. Requirement
+This software requires VE OS and libc for VE.
+
+2. Build and Install
+See INSTALL.
+
+3. How to Use
+This program is not intended to be used directly from ve_exec by users.
+VEO loads and start this program on creating a VEO process handle.

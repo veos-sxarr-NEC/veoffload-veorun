@@ -1,0 +1,49 @@
+Summary: VE helper program for VE Offloading Framework
+Name: @PACKAGE@
+Version: @VERSION@
+Release: @RELEASE@
+Vendor: NEC Corporation
+Group: System Environment/Libraries
+License: GPL
+Source0: @PACKAGE@-@VERSION@.tar.gz
+Requires: veos musl-libc-ve log4c
+BuildRequires: musl-libc-ve-devel log4c-devel patch vedebuginfo
+%description
+VE offloading framework (VEO) is low-leve interface to control
+VE process from VH side to provide accelerator-like heterogeneous
+programming model like OpenMP and OpenACC.
+
+%define _prefix @prefix@
+%define _libdir @libdir@
+%define _libexecdir @libexecdir@
+%define _includedir @includedir@
+%define __strip /opt/nec/ve/bin/nstrip
+%global __debug_install_post /opt/nec/ve/libexec/find-debuginfo.sh %{nil}
+
+%package devel
+Summary: Development package for veorun
+Requires: %{name} = %{version}-%{release}
+
+%description devel
+This package includes header files of veorun.
+Requires: %{name} = %{version}-%{release}
+
+%prep
+%setup -q
+
+%build
+%configure --host=ve-unknown-linux-gnu --libdir=%{_libdir}
+%make_build
+
+%install
+%make_install
+install -m755 mk_veorun_static $RPM_BUILD_ROOT%{_libexecdir}/
+
+%files
+%{_libexecdir}/veorun
+
+%files devel
+%{_includedir}/veorun.h
+%{_includedir}/veo_private_defs.h
+%{_libdir}/libveorun.a
+%{_libexecdir}/mk_veorun_static
