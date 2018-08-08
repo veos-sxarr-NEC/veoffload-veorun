@@ -16,7 +16,6 @@ static char name_buffer[VEORUN_SYMNAME_LEN_MAX + 1];
 /* in veo_block.s */
 extern void _veo_block(void *);
 extern uint64_t _veo_call_kernel_function;
-extern uint64_t _veo_get_sp(void);
 
 typedef struct {char *n; void *v;} static_sym_t;
 /* in dummy.c or the self-compiled generated static symtable */
@@ -80,7 +79,6 @@ int main(int argc, char *argv[])
 		.name_buffer = (uintptr_t)name_buffer,
 		.call_func = (uintptr_t)_veo_call_kernel_function,
 		.exit = (uintptr_t)_veo_proc_exit,
-		.get_sp = (uintptr_t)_veo_get_sp,
 	};
 	_init_static_symtable();
 	_veo_block(&helpers);

@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([veoffload-veorun], [1.0.2])
+AC_INIT([veoffload-veorun], [1.2.1])
 AC_CONFIG_SRCDIR([veorun.c])
 AM_INIT_AUTOMAKE([foreign -Wall])
 

@@ -16,6 +16,9 @@ _veo_do_block:
 	shm.l %s62, 0x0(%s63)
 	shm.l %s61, 0x8(%s63)
 	shm.l %s0, 0x10(%s63)
+	## 0x18-0x28 are reserved for %s1-%s3
+	## save the current sp
+	shm.l %sp, 0x30(%s63)
 	monc
 	.globl _veo_call_kernel_function
 _veo_call_kernel_function:
@@ -25,10 +28,3 @@ _veo_call_kernel_function:
         # restore %sp in case it was changed for args passing
         or %sp, 0, %fp
 	br.l _veo_do_block
-
-        # return current value of stack pointer
-        .text
-	.globl _veo_get_sp
-_veo_get_sp:
-        or %s0, 0, %sp
-        b.l (,%lr)

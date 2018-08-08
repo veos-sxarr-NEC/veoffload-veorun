@@ -41,7 +41,6 @@ struct veo__helper_functions {
   uint64_t create_thread;
   uint64_t call_func;
   uint64_t exit;
-  uint64_t get_sp;
 };
 
 #ifdef __cplusplus
