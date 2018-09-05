@@ -1,7 +1,9 @@
 lib_LIBRARIES = libveorun.a
 libexec_PROGRAMS = veorun
-include_HEADERS = veorun.h veo_private_defs.h
-EXTRA_DIST = veorun.spec.in mk_veorun_static
+dist_libexec_SCRIPTS = mk_veorun_static
+veorunheadersdir = $(includedir)/veorun
+veorunheaders_HEADERS = veorun.h veo_private_defs.h
+EXTRA_DIST = veorun.spec.in
 dist_noinst_DATA = veorun.spec
 CLEANFILES = veorun.spec
 veorun_SOURCES = veorun.c veo_block.S dummy.c

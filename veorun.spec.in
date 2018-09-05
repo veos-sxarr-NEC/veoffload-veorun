@@ -37,13 +37,12 @@ Requires: %{name} = %{version}-%{release}
 
 %install
 %make_install
-install -m755 mk_veorun_static $RPM_BUILD_ROOT%{_libexecdir}/
 
 %files
 %{_libexecdir}/veorun
 
 %files devel
-%{_includedir}/veorun.h
-%{_includedir}/veo_private_defs.h
+%{_includedir}/veorun/veorun.h
+%{_includedir}/veorun/veo_private_defs.h
 %{_libdir}/libveorun.a
 %{_libexecdir}/mk_veorun_static
