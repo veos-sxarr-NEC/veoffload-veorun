@@ -11,8 +11,6 @@
 #include <veorun.h>
 #include <veo_private_defs.h>
 
-static char name_buffer[VEORUN_SYMNAME_LEN_MAX + 1];
-
 /* in veo_block.s */
 extern void _veo_block(void *);
 extern uint64_t _veo_call_kernel_function;
@@ -33,19 +31,19 @@ int64_t _veo_create_thread_helper(void)
 	return rv;
 }
 
-int64_t _veo_load_library_helper(void)
+int64_t _veo_load_library_helper(const char *name)
 {
-	return (intptr_t)dlopen(name_buffer, RTLD_NOW);
+	return (intptr_t)dlopen(name, RTLD_NOW);
 }
 
-int64_t _veo_find_sym_helper(void *handle)
+int64_t _veo_find_sym_helper(void *handle, const char *name)
 {
 	if (handle)
-		return (intptr_t)dlsym(handle, name_buffer);
+		return (intptr_t)dlsym(handle, name);
 	if (_veo_static_symtable) {
 		static_sym_t *t = _veo_static_symtable;
 		while (t->n != NULL) {
-			if (strcmp(t->n, name_buffer) == 0)
+			if (strcmp(t->n, name) == 0)
 				return (int64_t)t->v;
 			t++;
 		}
@@ -71,12 +69,12 @@ void _veo_proc_exit(void)
 int main(int argc, char *argv[])
 {
 	struct veo__helper_functions helpers = {
+		.version = VEORUN_VERSION,
 		.load_library = (uintptr_t)_veo_load_library_helper,
 		.find_sym = (uintptr_t)_veo_find_sym_helper,
 		.alloc_buff = (uintptr_t)_veo_alloc_buff,
 		.free_buff = (uintptr_t)_veo_free_buff,
 		.create_thread = (uintptr_t)_veo_create_thread_helper,
-		.name_buffer = (uintptr_t)name_buffer,
 		.call_func = (uintptr_t)_veo_call_kernel_function,
 		.exit = (uintptr_t)_veo_proc_exit,
 	};

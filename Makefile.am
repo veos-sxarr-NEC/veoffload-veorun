@@ -1,11 +1,12 @@
 lib_LIBRARIES = libveorun.a
 libexec_PROGRAMS = veorun
-dist_libexec_SCRIPTS = mk_veorun_static
+libexec_SCRIPTS = mk_veorun_static
 veorunheadersdir = $(includedir)/veorun
 veorunheaders_HEADERS = veorun.h veo_private_defs.h
-EXTRA_DIST = veorun.spec.in
+EXTRA_DIST = veorun.spec.in mk_veorun_static.in
 dist_noinst_DATA = veorun.spec
-CLEANFILES = veorun.spec
+CLEANFILES = veorun.spec mk_veorun_static
+SUBDIRS = debian
 veorun_SOURCES = veorun.c veo_block.S dummy.c
 #AM_CFLAGS = -g -mno-vector -mno-vector-memcpy
 AM_CFLAGS = -g -mno-vector
@@ -21,3 +22,13 @@ edit = $(SED) -e 's|@PACKAGE[@]|@PACKAGE@|g' \
 
 veorun.spec: $(srcdir)/veorun.spec.in
 	$(edit) $< > $@
+
+mk_veorun_static: $(srcdir)/mk_veorun_static.in
+	$(edit) $< > $@
+
+print-distdir:
+	@echo $(distdir)
+print-package:
+	@echo $(PACKAGE)
+print-version:
+	@echo $(VERSION)

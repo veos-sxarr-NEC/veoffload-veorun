@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([veoffload-veorun], [1.2.2])
+AC_INIT([veoffload-veorun], [1.3.1])
 AC_CONFIG_SRCDIR([veorun.c])
 AM_INIT_AUTOMAKE([foreign -Wall])
 
@@ -27,5 +27,5 @@ AC_TYPE_UINT64_T
 
 # Checks for library functions.
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile debian/Makefile])
 AC_OUTPUT

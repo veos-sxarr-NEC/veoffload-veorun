@@ -1,0 +1,4 @@
+.@includedir@/veorun/veorun.h
+.@includedir@/veorun/veo_private_defs.h
+.@libdir@/libveorun.a
+.@libexecdir@/mk_veorun_static

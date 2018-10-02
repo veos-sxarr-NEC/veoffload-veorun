@@ -1,0 +1,27 @@
+#!/usr/bin/make -f
+export DH_VERBOSE=1
+
+
+export PREFIX = "@prefix@"
+export INCLUDEDIR = "@includedir@"
+export LIBEXECDIR = "@libexecdir@"
+
+
+%:
+	dh $@
+
+override_dh_autoreconf:
+	PATH=/opt/nec/ve/bin:${PATH} /opt/nec/ve/bin/autoreconf -if
+
+override_dh_auto_configure:
+	dh_auto_configure -- --host=ve-unknown-linux-gnu \
+	  --prefix=${PREFIX} \
+	  --includedir=${INCLUDEDIR} \
+	  --libexecdir=${LIBEXECDIR} \
+	  --with-release-id=@RELEASE@
+
+override_dh_shlibdeps:
+	dh_shlibdeps -X veorun -- --ignore-missing-info
+
+override_dh_strip:
+	PATH=/opt/nec/ve/ve-nec-linux/bin:${PATH} dh_strip

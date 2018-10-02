@@ -1,0 +1,23 @@
+Source: @PACKAGE@
+Section: misc
+Priority: extra
+Maintainer: NEC Corporation
+Build-Depends: debhelper (>=9), dh-autoreconf
+Standards-Version: 3.9.8
+
+Package: @PACKAGE@
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description:  VE helper program for VE Offloading Framework
+ VE offloading framework (VEO) is low-leve interface to control
+ VE process from VH side to provide accelerator-like heterogeneous
+ programming model like OpenMP and OpenACC.
+
+Package: @PACKAGE@-dev
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends}, ${shlibs:Depends}, @PACKAGE@ (= @VERSION@-@RELEASE@)
+Description: Development package for veorun
+ This package contains the files required to VEO librares.
+ This package is not required for VE programs.
