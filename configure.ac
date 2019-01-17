@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([veoffload-veorun], [1.3.2])
+AC_INIT([veoffload-veorun], [2.0.0])
 AC_CONFIG_SRCDIR([veorun.c])
 AM_INIT_AUTOMAKE([foreign -Wall])
 
@@ -17,6 +17,12 @@ AC_PROG_SED
 AM_PROG_AR
 
 # Checks for libraries.
+AC_SEARCH_LIBS([dlopen], [dl], [], [
+  AC_MSG_ERROR([dlopen() is not found])
+])
+AC_SEARCH_LIBS([pthread_create], [pthread], [], [
+  AC_MSG_ERROR([pthread_create() is not found])
+])
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdint.h dlfcn.h pthread.h])

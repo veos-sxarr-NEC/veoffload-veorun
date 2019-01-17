@@ -8,22 +8,21 @@ dist_noinst_DATA = veorun.spec
 CLEANFILES = veorun.spec mk_veorun_static
 SUBDIRS = debian
 veorun_SOURCES = veorun.c veo_block.S dummy.c
-#AM_CFLAGS = -g -mno-vector -mno-vector-memcpy
-AM_CFLAGS = -g -mno-vector
 libveorun_a_SOURCES = veorun.c veo_block.S dummy.c
 
 edit = $(SED) -e 's|@PACKAGE[@]|@PACKAGE@|g' \
               -e 's|@VERSION[@]|@VERSION@|g' \
               -e 's|@RELEASE[@]|@RELEASE@|g' \
+              -e 's|@CC[@]|@CC@|g' \
               -e 's|@prefix[@]|@prefix@|g' \
 	      -e 's|@libdir[@]|@libdir@|g' \
               -e 's|@libexecdir[@]|@libexecdir@|g' \
               -e 's|@includedir[@]|@includedir@|g'
 
-veorun.spec: $(srcdir)/veorun.spec.in
+veorun.spec: $(srcdir)/veorun.spec.in Makefile
 	$(edit) $< > $@
 
-mk_veorun_static: $(srcdir)/mk_veorun_static.in
+mk_veorun_static: $(srcdir)/mk_veorun_static.in Makefile
 	$(edit) $< > $@
 
 print-distdir:

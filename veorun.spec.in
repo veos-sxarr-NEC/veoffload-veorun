@@ -1,13 +1,26 @@
 Summary: VE helper program for VE Offloading Framework
+%if "%{libc}" == "glibc"
 Name: @PACKAGE@
+Conflicts: @PACKAGE@-musl
+%else
+Name: @PACKAGE@-musl
+Conflicts: @PACKAGE@
+%endif
 Version: @VERSION@
 Release: @RELEASE@%{?dist}
 Vendor: NEC Corporation
 Group: System Environment/Libraries
 License: GPL
 Source0: @PACKAGE@-@VERSION@.tar.gz
-Requires: veos musl-libc-ve log4c
-BuildRequires: musl-libc-ve-devel log4c-devel patch vedebuginfo
+Requires: veos
+BuildRequires: vedebuginfo
+%if "%{libc}" == "glibc"
+Requires: glibc-ve
+BuildRequires: glibc-ve-devel
+%else
+Requires: musl-libc-ve
+BuildRequires: musl-libc-ve-devel
+%endif
 %description
 VE offloading framework (VEO) is low-leve interface to control
 VE process from VH side to provide accelerator-like heterogeneous
@@ -30,10 +43,10 @@ This package includes header files of veorun.
 Requires: %{name} = %{version}-%{release}
 
 %prep
-%setup -q
+%setup -q -n @PACKAGE@-@VERSION@
 
 %build
-%configure --host=ve-unknown-linux-gnu --libdir=%{_libdir}
+%configure --host=ve-nec-linux --libdir=%{_libdir} CC=@CC@
 %make_build
 
 %install

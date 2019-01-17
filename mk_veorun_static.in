@@ -25,6 +25,7 @@ CFLAGS=${CFLAGS:-}
 EXT_FILE=`mktemp /tmp/veo.extXXXXXXXX`
 DEF_FILE=`mktemp /tmp/veo.defXXXXXXXX`
 SRC_FILE=`mktemp /tmp/veorunXXXXXXX.c`
+OBJ_FILE=${SRC_FILE/.c/.o}
 
 head() {
     local SIZE=$1
