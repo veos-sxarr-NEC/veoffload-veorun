@@ -78,7 +78,7 @@ cat $DEF_FILE >> $SRC_FILE
 tail >> $SRC_FILE
 
 $CC $CFLAGS -c $SRC_FILE -o $OBJ_FILE
-$CXX $CFLAGS -o $VEORUN $OBJ_FILE $LIBS @libdir@/libveorun.a \
+$CXX $CFLAGS -o $VEORUN $OBJ_FILE $LIBS @libdir@/libveorun.a -ldl -lpthread \
     && echo "created specific $VEORUN"
 
 rm -f $EXT_FILE $DEF_FILE $SRC_FILE $OBJ_FILE
