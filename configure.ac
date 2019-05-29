@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([veoffload-veorun], [2.0.3])
+AC_INIT([veoffload-veorun], [2.1.0])
 AC_CONFIG_SRCDIR([veorun.c])
 AM_INIT_AUTOMAKE([foreign -Wall])
 
@@ -15,6 +15,7 @@ AC_PROG_CC
 AM_PROG_AS
 AC_PROG_SED
 AM_PROG_AR
+AC_PROG_LN_S
 
 # Checks for libraries.
 AC_SEARCH_LIBS([dlopen], [dl], [], [

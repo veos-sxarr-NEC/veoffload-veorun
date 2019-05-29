@@ -2,3 +2,5 @@
 .@includedir@/veorun/veo_private_defs.h
 .@libdir@/libveorun.a
 .@libexecdir@/mk_veorun_static
+.@bindir@/mk_veorun_static
+.@libexecdir@/gen_veorun_static_symtable

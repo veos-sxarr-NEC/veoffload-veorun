@@ -7,6 +7,7 @@
 #include <pthread.h>
 #include <dlfcn.h>
 #include <string.h>
+#include <signal.h>
 
 #include <veorun.h>
 #include <veo_private_defs.h>
@@ -20,6 +21,15 @@ typedef struct {char *n; void *v;} static_sym_t;
 extern static_sym_t *_veo_static_symtable;
 extern void _init_static_symtable(void);
 
+void *_veorun_thread_init(void *arg)
+{
+	sigset_t set;
+	sigfillset(&set);
+	pthread_sigmask(SIG_BLOCK, &set, NULL);
+	_veo_block(0);
+	return 0;
+}
+
 int64_t _veo_create_thread_helper(void)
 {
 	int rv;
@@ -27,7 +37,7 @@ int64_t _veo_create_thread_helper(void)
 	pthread_attr_t _a;
 	pthread_attr_init(&_a);
 	pthread_attr_setdetachstate(&_a, PTHREAD_CREATE_DETACHED);
-	rv = pthread_create(&_t, &_a, (void *(*)(void *))_veo_block, NULL);
+	rv = pthread_create(&_t, &_a, _veorun_thread_init, NULL);
 	return rv;
 }
 

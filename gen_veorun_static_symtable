@@ -1,0 +1,61 @@
+#!/usr/bin/python
+
+import subprocess
+import sys
+
+class VeoObjects(object):
+    NM = '/opt/nec/ve/bin/nnm'
+
+    def _load(self, objs):
+        # addr type name
+        nm = subprocess.Popen([self.NM] + objs, stdout = subprocess.PIPE)
+        s = [s[2] for s in [l.rstrip().split() for l in nm.stdout] \
+                  if len(s) == 3 and \
+                     s[1] in ['T', 'D', 'u', 'G', 'S', 'B', 'A', 'R', 'C']]
+        nm.wait()
+        return s
+
+    def __init__(self, objs):
+        self._syms = self._load(objs)
+
+    def _header(self):
+        return '''\
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+
+'''
+
+    def _extern_symbols(self):
+        return '\n'.join(["extern uint64_t " + sym + ';' \
+                        for sym in self._syms]) + '\n'
+
+    def _init_function(self):
+        head = '''\
+typedef struct {char *n; uint64_t v;} _veorun_symtable_entry;
+
+_veorun_symtable_entry *_veo_static_symtable = NULL;
+
+void _init_static_symtable(void) {
+  int i = 0;
+  size_t size = %d + 1;
+  _veo_static_symtable = malloc(size * sizeof(_veorun_symtable_entry));
+
+  _veorun_symtable_entry *s = _veo_static_symtable;
+''' % (len(self._syms))
+
+        body = ''.join(['  s[i].n = strdup("%s"); s[i++].v = (uint64_t)&%s;\n' \
+                        % (s, s) for s in self._syms])
+
+        foot = '  s[i].n = NULL; s[i++].v = 0UL;\n}\n'
+        return head + body + foot
+
+    def src(self, f):
+      f.write(self._header() + self._extern_symbols() + self._init_function())
+
+
+def main(libs):
+    VeoObjects(libs).src(sys.stdout)
+
+if __name__ == '__main__':
+    main(sys.argv[1:])

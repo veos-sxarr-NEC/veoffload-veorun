@@ -13,6 +13,7 @@ edit = $(SED) -e 's|@PACKAGE[@]|@PACKAGE@|g' \
               -e 's|@prefix[@]|@prefix@|g' \
               -e 's|@includedir[@]|@includedir@|g' \
               -e 's|@libdir[@]|@libdir@|g' \
+              -e 's|@bindir[@]|@bindir@|g' \
               -e 's|@libexecdir[@]|@libexecdir@|g'
 
 control: $(srcdir)/control.in Makefile

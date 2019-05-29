@@ -37,6 +37,7 @@ programming model like OpenMP and OpenACC.
 %package devel
 Summary: Development package for veorun
 Requires: %{name} = %{version}-%{release}
+Requires: util-linux
 
 %description devel
 This package includes header files of veorun.
@@ -59,4 +60,6 @@ Requires: %{name} = %{version}-%{release}
 %{_includedir}/veorun/veorun.h
 %{_includedir}/veorun/veo_private_defs.h
 %{_libdir}/libveorun.a
+%{_bindir}/mk_veorun_static
 %{_libexecdir}/mk_veorun_static
+%{_libexecdir}/gen_veorun_static_symtable

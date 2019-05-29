@@ -1,6 +1,8 @@
+AM_LDFLAGS=-Wl,-z,max-page-size=0x4000000
 lib_LIBRARIES = libveorun.a
 libexec_PROGRAMS = veorun
-libexec_SCRIPTS = mk_veorun_static
+dist_libexec_SCRIPTS = gen_veorun_static_symtable
+bin_SCRIPTS = mk_veorun_static
 veorunheadersdir = $(includedir)/veorun
 veorunheaders_HEADERS = veorun.h veo_private_defs.h
 EXTRA_DIST = veorun.spec.in mk_veorun_static.in
@@ -31,3 +33,8 @@ print-package:
 	@echo $(PACKAGE)
 print-version:
 	@echo $(VERSION)
+
+install-exec-hook:
+	$(LN_S) $$(realpath --relative-to=$(DESTDIR)@libexecdir@ \
+	  $(DESTDIR)@bindir@/mk_veorun_static) \
+	  $(DESTDIR)@libexecdir@/mk_veorun_static
