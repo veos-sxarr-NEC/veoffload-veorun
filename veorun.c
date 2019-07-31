@@ -16,10 +16,11 @@
 extern void _veo_block(void *);
 extern uint64_t _veo_call_kernel_function;
 
-typedef struct {char *n; void *v;} static_sym_t;
-/* in dummy.c or the self-compiled generated static symtable */
-extern static_sym_t *_veo_static_symtable;
-extern void _init_static_symtable(void);
+typedef struct {const char *n; void *v;} static_sym_t;
+/* without generated static symtable, this weak version is used. */
+__attribute__((weak)) static_sym_t _veo_static_symtable[] = {
+	{.n = 0, .v = 0},
+};
 
 void *_veorun_thread_init(void *arg)
 {
@@ -88,7 +89,6 @@ int main(int argc, char *argv[])
 		.call_func = (uintptr_t)_veo_call_kernel_function,
 		.exit = (uintptr_t)_veo_proc_exit,
 	};
-	_init_static_symtable();
 	_veo_block(&helpers);
 	return 0;
 }

@@ -15,6 +15,7 @@ usage() {
 
 option_end=0
 LIBS=()
+EXTRA_LIBS=()
 VEORUN=''
 default_LDFLAGS="-no-proginf -pthread"
 while [ $# -gt 0 ]; do
@@ -33,6 +34,13 @@ while [ $# -gt 0 ]; do
       ;;
     '-fopenmp' | -L* | -l* | -Wl,*)
       default_LDFLAGS="${default_LDFLAGS} ${option}"
+      ;;
+    '--link-nosym='*)
+      # Bash 4.2 (on RHEL/CentOS7) does not support readarray with -d.
+      _extralibs=()
+      while read -rd,; do _extralibs+=("$REPLY"); done \
+        <<< "${option#--link-nosym=},"
+      EXTRA_LIBS=("${EXTRA_LIBS[@]}" "${_extralibs[@]}")
       ;;
     *)
       LIBS=(${LIBS[@]} "$option")
@@ -57,9 +65,26 @@ else
   fi
 fi
 
-NM=${NM:-nm}
 CC=${CC:-/opt/nec/ve/bin/ncc}
 CXX=${CXX:-/opt/nec/ve/bin/nc++}
+FC=${FC:-/opt/nec/ve/bin/nfort}
+# find an appropriage linker
+default_CCLD="$CC"
+# try Fortran compiler
+FC=$(which $FC 2>/dev/null)
+if [ $? -eq 0 ]; then
+  default_CCLD="$FC"
+  default_LDFLAGS="-cxxlib ${default_LDFLAGS}"
+else
+  # if Fortran compiler (nfort) is not found, try C++ compiler
+  CXX=$(which $CXX 2>/dev/null)
+  if [ $? -eq 0 ]; then
+    default_CCLD="$CXX"
+  fi
+fi
+
+NM=${NM:-nm}
+CCLD=${CCLD:-${default_CCLD}}
 CFLAGS=${CFLAGS:-}
 LDFLAGS=${LDFLAGS:-${default_LDFLAGS}}
 
@@ -70,5 +95,5 @@ trap "rm -f $SRC_FILE $OBJ_FILE" EXIT
 @libexecdir@/gen_veorun_static_symtable "${LIBS[@]}" > $SRC_FILE
 
 $CC $CFLAGS -c $SRC_FILE -o $OBJ_FILE
-$CXX $CFLAGS -o $VEORUN $OBJ_FILE "${LIBS[@]}" @libdir@/libveorun.a $LDFLAGS \
-    && echo "created specific $VEORUN"
+$CCLD $CFLAGS -o $VEORUN $OBJ_FILE "${LIBS[@]}" "${EXTRA_LIBS[@]}" \
+  @libdir@/libveorun.a $LDFLAGS && echo "created specific $VEORUN"

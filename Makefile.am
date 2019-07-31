@@ -1,4 +1,5 @@
-AM_LDFLAGS=-Wl,-z,max-page-size=0x4000000
+AM_LDFLAGS=-Wl,-z,max-page-size=0x4000000 -no-proginf
+veorun_CFLAGS=
 lib_LIBRARIES = libveorun.a
 libexec_PROGRAMS = veorun
 dist_libexec_SCRIPTS = gen_veorun_static_symtable
@@ -9,13 +10,14 @@ EXTRA_DIST = veorun.spec.in mk_veorun_static.in
 dist_noinst_DATA = veorun.spec
 CLEANFILES = veorun.spec mk_veorun_static
 SUBDIRS = debian
-veorun_SOURCES = veorun.c veo_block.S dummy.c
-libveorun_a_SOURCES = veorun.c veo_block.S dummy.c
+veorun_SOURCES = veorun.c veo_block.S
+libveorun_a_SOURCES = veorun.c veo_block.S
 
 edit = $(SED) -e 's|@PACKAGE[@]|@PACKAGE@|g' \
               -e 's|@VERSION[@]|@VERSION@|g' \
               -e 's|@RELEASE[@]|@RELEASE@|g' \
               -e 's|@CC[@]|@CC@|g' \
+              -e 's|@CCLD[@]|@CCLD@|g' \
               -e 's|@prefix[@]|@prefix@|g' \
 	      -e 's|@libdir[@]|@libdir@|g' \
               -e 's|@libexecdir[@]|@libexecdir@|g' \

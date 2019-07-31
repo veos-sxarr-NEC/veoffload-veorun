@@ -30,28 +30,25 @@ class VeoObjects(object):
         return '\n'.join(["extern uint64_t " + sym + ';' \
                         for sym in self._syms]) + '\n'
 
-    def _init_function(self):
+    def _init_data(self):
         head = '''\
-typedef struct {char *n; uint64_t v;} _veorun_symtable_entry;
+typedef struct {const char *n; void *v;} static_sym_t;
 
-_veorun_symtable_entry *_veo_static_symtable = NULL;
+static_sym_t _veo_static_symtable[] = {
+'''
 
-void _init_static_symtable(void) {
-  int i = 0;
-  size_t size = %d + 1;
-  _veo_static_symtable = malloc(size * sizeof(_veorun_symtable_entry));
 
-  _veorun_symtable_entry *s = _veo_static_symtable;
-''' % (len(self._syms))
-
-        body = ''.join(['  s[i].n = strdup("%s"); s[i++].v = (uint64_t)&%s;\n' \
+        body = ''.join(['  { .n = "%s", .v = &%s},\n' \
                         % (s, s) for s in self._syms])
 
-        foot = '  s[i].n = NULL; s[i++].v = 0UL;\n}\n'
+        foot = '''\
+  { .n = 0, .v = 0},
+};
+'''
         return head + body + foot
 
     def src(self, f):
-      f.write(self._header() + self._extern_symbols() + self._init_function())
+      f.write(self._header() + self._extern_symbols() + self._init_data())
 
 
 def main(libs):

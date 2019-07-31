@@ -33,6 +33,7 @@ programming model like OpenMP and OpenACC.
 %define __strip /opt/nec/ve/bin/nstrip
 %define optflags -g -O2
 %global __debug_install_post /opt/nec/ve/libexec/find-debuginfo.sh %{nil}
+%define __requires_exclude ^libn(cc|c\\+\\+|fort)\\.so\\..*$
 
 %package devel
 Summary: Development package for veorun
@@ -47,7 +48,7 @@ Requires: %{name} = %{version}-%{release}
 %setup -q -n @PACKAGE@-@VERSION@
 
 %build
-%configure --host=ve-nec-linux --libdir=%{_libdir} CC=@CC@
+%configure --host=ve-nec-linux --libdir=%{_libdir} CC=@CC@ CCLD="@CCLD@"
 %make_build
 
 %install

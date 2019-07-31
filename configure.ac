@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([veoffload-veorun], [2.1.0])
+AC_INIT([veoffload-veorun], [2.1.1])
 AC_CONFIG_SRCDIR([veorun.c])
 AM_INIT_AUTOMAKE([foreign -Wall])
 
@@ -12,6 +12,8 @@ AC_SUBST(RELEASE)
 # Checks for programs.
 AC_PROG_RANLIB
 AC_PROG_CC
+AC_SUBST(CCLD)
+AM_PROG_CC_C_O
 AM_PROG_AS
 AC_PROG_SED
 AM_PROG_AR
