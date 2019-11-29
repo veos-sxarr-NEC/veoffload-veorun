@@ -27,7 +27,7 @@
 #define __VE_VEORUN_H__
 
 #define VEORUN_SYMNAME_LEN_MAX (255)
-#define VEORUN_VERSION (0x1004F4556UL) /* 'V' 'E' 'O' \0 1 */
+#define VEORUN_VERSION (0x2004F4556UL) /* 'V' 'E' 'O' \0 2 */
 
 #ifdef __cplusplus
 extern "C" {

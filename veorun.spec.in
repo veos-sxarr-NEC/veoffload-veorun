@@ -53,9 +53,13 @@ Requires: %{name} = %{version}-%{release}
 
 %install
 %make_install
+mkdir -p $RPM_BUILD_ROOT/%{_prefix}/libexec
+ln -sfr $RPM_BUILD_ROOT/%{_libexecdir}/veorun \
+        $RPM_BUILD_ROOT/%{_prefix}/libexec/veorun
 
 %files
 %{_libexecdir}/veorun
+%{_prefix}/libexec/veorun
 
 %files devel
 %{_includedir}/veorun/veorun.h
