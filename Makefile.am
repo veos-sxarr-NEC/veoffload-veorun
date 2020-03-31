@@ -1,4 +1,4 @@
-AM_LDFLAGS=-Wl,-z,max-page-size=0x4000000 -no-proginf
+AM_LDFLAGS=-Wl,-z,max-page-size=0x4000000 -no-proginf -Wl,-rpath=@libdir@
 veorun_CFLAGS=
 lib_LIBRARIES = libveorun.a
 libexec_PROGRAMS = veorun

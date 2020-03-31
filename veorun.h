@@ -27,14 +27,16 @@
 #define __VE_VEORUN_H__
 
 #define VEORUN_SYMNAME_LEN_MAX (255)
-#define VEORUN_VERSION (0x2004F4556UL) /* 'V' 'E' 'O' \0 2 */
+#define VEORUN_VERSION2 (0x2004F4556UL) /* 'V' 'E' 'O' \0 2 */
+#define VEORUN_VERSION3 (0x3004F4556UL) /* 'V' 'E' 'O' \0 3 */
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-struct veo__helper_functions {
-  uint64_t version;
+struct veo__helper_functions_ver2 {
+  uint64_t version; /* VEORUN_VERSION2 */
   uint64_t load_library;
   uint64_t alloc_buff;
   uint64_t free_buff;
@@ -44,8 +46,23 @@ struct veo__helper_functions {
   uint64_t exit;
 };
 
+struct veo__helper_functions_ver3 {
+  uint64_t version; /* VEORUN_VERSION3 */
+  uint64_t load_library;
+  uint64_t alloc_buff;
+  uint64_t free_buff;
+  uint64_t find_sym;
+  uint64_t create_thread;
+  uint64_t call_func;
+  uint64_t exit;
+  uint64_t create_thread_with_attr;
+};
+
+struct veo__thread_attribute_ver3 {
+  uint64_t cpu;
+  uint64_t stack_sz;
+};
 #ifdef __cplusplus
 } // extern "C"
 #endif
-
 #endif

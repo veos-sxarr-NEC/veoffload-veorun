@@ -61,6 +61,28 @@ int64_t _veo_create_thread_helper(int cpu)
 	return rv;
 }
 
+int64_t _veo_create_thread_helper_with_attr(struct veo__thread_attribute_ver3 *attr)
+{
+	int rv, cpu;
+	uint64_t stack_sz;
+	cpu = (int)(attr->cpu);
+	stack_sz = attr->stack_sz;
+	pthread_t _t;
+	pthread_attr_t _a;
+	pthread_attr_init(&_a);
+	pthread_attr_setdetachstate(&_a, PTHREAD_CREATE_DETACHED);
+	pthread_attr_setstacksize(&_a, stack_sz);
+	/* to allow a child thread to run on any cores */
+	cpu_set_t oldmask;
+	sched_getaffinity(0, sizeof(oldmask), &oldmask);
+	sched_setaffinity(0, sizeof(_veorun_all_cpu_mask),
+		&_veorun_all_cpu_mask);
+	rv = pthread_create(&_t, &_a, _veorun_thread_init, cpu);
+	/* restore the affinity */
+	sched_setaffinity(0, sizeof(oldmask), &oldmask);
+	return rv;
+}
+
 int64_t _veo_load_library_helper(const char *name)
 {
 	return (intptr_t)dlopen(name, RTLD_NOW);
@@ -107,8 +129,8 @@ void _veorun_init_all_cpu_mask(void)
 
 int main(int argc, char *argv[])
 {
-	struct veo__helper_functions helpers = {
-		.version = VEORUN_VERSION,
+	struct veo__helper_functions_ver3 helpers = {
+		.version = VEORUN_VERSION3,
 		.load_library = (uintptr_t)_veo_load_library_helper,
 		.find_sym = (uintptr_t)_veo_find_sym_helper,
 		.alloc_buff = (uintptr_t)_veo_alloc_buff,
@@ -116,6 +138,8 @@ int main(int argc, char *argv[])
 		.create_thread = (uintptr_t)_veo_create_thread_helper,
 		.call_func = (uintptr_t)_veo_call_kernel_function,
 		.exit = (uintptr_t)_veo_proc_exit,
+		.create_thread_with_attr =
+				(uintptr_t)_veo_create_thread_helper_with_attr,
 	};
 	_veorun_init_all_cpu_mask();
 	_veo_block(&helpers);

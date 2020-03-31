@@ -18,6 +18,7 @@ LIBS=()
 EXTRA_LIBS=()
 VEORUN=''
 default_LDFLAGS="-no-proginf -pthread"
+default_CFLAGS=""
 while [ $# -gt 0 ]; do
   option="$1"
   if [ $option_end -eq 0 ]; then
@@ -34,6 +35,9 @@ while [ $# -gt 0 ]; do
       ;;
     '-fopenmp' | -L* | -l* | -Wl,*)
       default_LDFLAGS="${default_LDFLAGS} ${option}"
+      ;;
+    '-ftrace')
+      default_CFLAGS="${default_CFLAGS} ${option}"
       ;;
     '--link-nosym='*)
       # Bash 4.2 (on RHEL/CentOS7) does not support readarray with -d.
@@ -85,7 +89,7 @@ fi
 
 NM=${NM:-nm}
 CCLD=${CCLD:-${default_CCLD}}
-CFLAGS=${CFLAGS:-}
+CFLAGS=${CFLAGS:-${default_CFLAGS}}
 LDFLAGS=${LDFLAGS:-${default_LDFLAGS}}
 
 SRC_FILE=$(mktemp /tmp/veorunXXXXXXX.c)
