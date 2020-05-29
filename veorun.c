@@ -85,7 +85,12 @@ int64_t _veo_create_thread_helper_with_attr(struct veo__thread_attribute_ver3 *a
 
 int64_t _veo_load_library_helper(const char *name)
 {
-	return (intptr_t)dlopen(name, RTLD_NOW);
+	return (intptr_t)dlopen(name, RTLD_LAZY);
+}
+
+int64_t _veo_load_library_err_helper(uint64_t buff, size_t size)
+{
+	return snprintf((char *)buff, size, "%s", dlerror());
 }
 
 int64_t _veo_find_sym_helper(void *handle, const char *name)
@@ -129,8 +134,8 @@ void _veorun_init_all_cpu_mask(void)
 
 int main(int argc, char *argv[])
 {
-	struct veo__helper_functions_ver3 helpers = {
-		.version = VEORUN_VERSION3,
+	struct veo__helper_functions_ver4 helpers = {
+		.version = VEORUN_VERSION4,
 		.load_library = (uintptr_t)_veo_load_library_helper,
 		.find_sym = (uintptr_t)_veo_find_sym_helper,
 		.alloc_buff = (uintptr_t)_veo_alloc_buff,
@@ -140,6 +145,7 @@ int main(int argc, char *argv[])
 		.exit = (uintptr_t)_veo_proc_exit,
 		.create_thread_with_attr =
 				(uintptr_t)_veo_create_thread_helper_with_attr,
+		.load_library_err = (uintptr_t)_veo_load_library_err_helper,
 	};
 	_veorun_init_all_cpu_mask();
 	_veo_block(&helpers);

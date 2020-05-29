@@ -32,7 +32,12 @@ programming model like OpenMP and OpenACC.
 %define _includedir @includedir@
 %define __strip /opt/nec/ve/bin/nstrip
 %define optflags -g -O2
+%if 0%{?rhel} == 8
+%global __debug_install_post /opt/nec/ve/libexec/find-debuginfo.sh -o debugsourcefiles.list %{nil}
+%define	build_ldflags	"-Wl,-z,max-page-size=0x4000000,-rpath=@libdir@,-z,lazy"
+%else
 %global __debug_install_post /opt/nec/ve/libexec/find-debuginfo.sh %{nil}
+%endif
 %define __requires_exclude ^libn(cc|c\\+\\+|fort)\\.so\\..*$
 
 %package devel
@@ -47,6 +52,10 @@ Requires: %{name} = %{version}-%{release}
 %prep
 %setup -q -n @PACKAGE@-@VERSION@
 
+%if 0%{?rhel} == 8
+pathfix.py -pn -i /usr/bin/python3 $RPM_BUILD_DIR/$RPM_PACKAGE_NAME-$RPM_PACKAGE_VERSION/gen_veorun_static_symtable
+%endif
+
 %build
 %configure --host=ve-nec-linux --libdir=%{_libdir} CC=@CC@ CCLD="@CCLD@"
 %make_build
@@ -54,8 +63,10 @@ Requires: %{name} = %{version}-%{release}
 %install
 %make_install
 mkdir -p $RPM_BUILD_ROOT/%{_prefix}/libexec
+
 ln -sfr $RPM_BUILD_ROOT/%{_libexecdir}/veorun \
         $RPM_BUILD_ROOT/%{_prefix}/libexec/veorun
+
 
 %files
 %{_libexecdir}/veorun

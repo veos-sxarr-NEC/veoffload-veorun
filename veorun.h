@@ -29,6 +29,7 @@
 #define VEORUN_SYMNAME_LEN_MAX (255)
 #define VEORUN_VERSION2 (0x2004F4556UL) /* 'V' 'E' 'O' \0 2 */
 #define VEORUN_VERSION3 (0x3004F4556UL) /* 'V' 'E' 'O' \0 3 */
+#define VEORUN_VERSION4 (0x4004F4556UL) /* 'V' 'E' 'O' \0 4 */
 
 
 #ifdef __cplusplus
@@ -56,6 +57,19 @@ struct veo__helper_functions_ver3 {
   uint64_t call_func;
   uint64_t exit;
   uint64_t create_thread_with_attr;
+};
+
+struct veo__helper_functions_ver4 {
+  uint64_t version; /* VEORUN_VERSION4 */
+  uint64_t load_library;
+  uint64_t alloc_buff;
+  uint64_t free_buff;
+  uint64_t find_sym;
+  uint64_t create_thread;
+  uint64_t call_func;
+  uint64_t exit;
+  uint64_t create_thread_with_attr;
+  uint64_t load_library_err;
 };
 
 struct veo__thread_attribute_ver3 {
